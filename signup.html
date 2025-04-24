@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Vehicle Pooling</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('background.png')no-repeat center center/cover;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+    }
+    .form-box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+    }
+    .form-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 5px;
+    }
+    .radio-group {
+      margin-bottom: 15px;
+    }
+    .radio-group label {
+      margin-right: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>Sign Up</h2>
+    <form onsubmit="registerUser(event)">
+      <input type="text" name="fullname" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+
+      <div class="radio-group">
+        <label><input type="radio" name="role" value="user" onclick="toggleWorkerFields()" required> User</label>
+        <label><input type="radio" name="role" value="worker" onclick="toggleWorkerFields()"> Worker</label>
+      </div>
+
+      <div id="worker-fields" style="display: none;">
+        <input type="tel" name="aadhar" placeholder="Aadhar Number" pattern="\d{12}" title="Enter a 12-digit Aadhar number">
+        <input type="text" name="vehicleNo" placeholder="Vehicle Number">
+        <input type="text" name="vehicleType" placeholder="Type of Vehicle">
+        <div class="radio-group">
+          <label><input type="radio" name="engineType" value="electric"> Electric</label>
+          <label><input type="radio" name="engineType" value="engine"> Engine</label>
+        </div>
+      </div>
+
+      <button type="submit">Sign Up</button>
+    </form>
+    <a href="signin.html">Already have an account? Sign In</a>
+    <a href="index.html">Back to Home</a>
+  </div>
+
+  <script>
+    function toggleWorkerFields() {
+      const role = document.querySelector('input[name="role"]:checked').value;
+      const workerFields = document.getElementById('worker-fields');
+      workerFields.style.display = role === 'worker' ? 'block' : 'none';
+    }
+
+    function registerUser(event) {
+      event.preventDefault();
+
+      const role = document.querySelector('input[name="role"]:checked').value;
+      const userData = {
+        name: document.querySelector('input[name="fullname"]').value,
+        email: document.querySelector('input[name="email"]').value,
+        password: document.querySelector('input[name="password"]').value,
+        role: role
+      };
+
+      if (role === 'worker') {
+        userData.aadhar = document.querySelector('input[name="aadhar"]').value;
+        userData.vehicleNo = document.querySelector('input[name="vehicleNo"]').value;
+        userData.vehicleType = document.querySelector('input[name="vehicleType"]').value;
+        const engine = document.querySelector('input[name="engineType"]:checked');
+        userData.engineType = engine ? engine.value : "";
+      }
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+      alert("You are registered!");
+      window.location.href = "signin.html";
+    }
+  </script>
+</body>
+</html>

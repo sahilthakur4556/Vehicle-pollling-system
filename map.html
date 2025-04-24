@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pickup & Drop Points</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      height: 70%;
+      width: 100%;
+    }
+    .form-box {
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    input[type="text"] {
+      width: 45%;
+      padding: 10px;
+      margin-right: 5%;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <input id="pickup" type="text" placeholder="Enter pickup location">
+    <input id="drop" type="text" placeholder="Enter drop location">
+    <button onclick="route()">Show Route</button>
+  </div>
+  <div id="map"></div>
+
+  <script>
+    let map, directionsService, directionsRenderer;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 28.6139, lng: 77.2090 }, // Default to New Delhi
+        zoom: 12
+      });
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+    }
+
+    function route() {
+      const pickup = document.getElementById("pickup").value;
+      const drop = document.getElementById("drop").value;
+
+      const request = {
+        origin: pickup,
+        destination: drop,
+        travelMode: google.maps.TravelMode.DRIVING
+      };
+
+      directionsService.route(request, function(result, status) {
+        if (status === "OK") {
+          directionsRenderer.setDirections(result);
+        } else {
+          alert("Could not find route. Please check your input.");
+        }
+      });
+    }
+  </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>
